@@ -5,7 +5,7 @@ import json
 
 # dictionary of how activities are named in the CSV files
 activities_dict = {"_Ascending stairs_": "ascending_stairs", 
-              "_Descending stairs_": "descendiing_stairs",
+              "_Descending stairs_": "descending_stairs",
               "_Lying down back_": "lying_down_back",
               "_Lying down on left_": "lying_down_left",
               "_Lying down on stomach_": "lying_down_stomach",
