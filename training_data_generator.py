@@ -24,6 +24,7 @@ def generate_training_data(directory = DATA_DIRECTORY):
             for sequence in sequences:
                 tagged_data.append((key, sequence))
 
+    print ("there are " + str(len(tagged_data)) + " tagged sequences in the dataset")
     return tagged_data
 
 # for testing
