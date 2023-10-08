@@ -14,10 +14,8 @@ if __name__=="__main__":
     sequences = [sequence for _, sequence in tagged_sequences]
     labels = [label for label, _ in tagged_sequences]
 
-#     Convert sequences to NumPy arrays (assuming sequences are already of shape (sequence_length, num_features))
+    # encode labels to numbers
     sequences = np.array(sequences, dtype=np.float32)
-
-    # Encode labels into numerical values (assuming you have a list of unique movement labels)
     label_to_index = {label: idx for idx, label in enumerate(UNIQUE_LABELS)}
     labels_encoded = [label_to_index[label] for label in labels]
     labels_encoded = np.array(labels_encoded)
@@ -25,7 +23,6 @@ if __name__=="__main__":
 
 
     # train and save model
-    
     trial_LSTM_model.train_and_save_model(sequences, labels_encoded,UNIQUE_LABELS, 6, 30) #batch_size, epochs
 
     
