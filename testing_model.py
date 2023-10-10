@@ -34,17 +34,18 @@ def run_test_with_1_sequence(test_sequence):
 
     print(predicted_tag)
 
-run_test_with_1_sequence(LYING_LEFT_SINGING)
-print("above should be lying down left singing")
+if __name__ == "__main__":
+    run_test_with_1_sequence(LYING_LEFT_SINGING)
+    print("above should be lying down left singing")
 
-run_test_with_1_sequence(SITTING_COUGHING)
-print("above should be sitting coughing")
+    run_test_with_1_sequence(SITTING_COUGHING)
+    print("above should be sitting coughing")
 
-run_test_with_1_sequence(STOMACH_NORMAL)
-print("above should be lying stomach normal breathing")
+    run_test_with_1_sequence(STOMACH_NORMAL)
+    print("above should be lying stomach normal breathing")
 
-run_test_with_1_sequence(SITTING_NORMAL)
-print("above should be sitting normal breathing")
+    run_test_with_1_sequence(SITTING_NORMAL)
+    print("above should be sitting normal breathing")
 
-run_test_with_1_sequence(RUNNING_NORMAL)
-print("above should be running normal breathing")
+    run_test_with_1_sequence(RUNNING_NORMAL)
+    print("above should be running normal breathing")
