@@ -46,4 +46,5 @@ def make_random_request():
     # Handle the response from the API
     print(response_post.json())
 
-
+if __name__=="__main__":
+    make_random_request()
