@@ -21,7 +21,7 @@ RUNNING_NORMAL =[['-0.34887695', '-2.0', '-0.24420166', '-50.515625', '101.35937
 def run_test_with_1_sequence(test_sequence):
     individual_sequence_array = np.array(test_sequence, dtype=np.float32)
     individual_sequence_array = np.expand_dims(individual_sequence_array, axis=0)
-    model = load_model("test_model.h5")
+    model = load_model("test_model.keras")
 
     # Perform inference to predict the tag
     predictions = model.predict(individual_sequence_array)

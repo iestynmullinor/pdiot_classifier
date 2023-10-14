@@ -19,4 +19,4 @@ def train_and_save_model(sequences, labels_encoded, unique_labels, epochs, batch
 
     #  training model
     model.fit(sequences, labels_encoded, epochs, batch_size)
-    model.save("test_model.h5")
+    model.save("test_model.keras")
