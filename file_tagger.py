@@ -15,7 +15,28 @@ activities_dict = {"_Ascending stairs_": "ascending_stairs",
               "_Running_": "running",
               "_Shuffle walking_": "shuffle_walking",
               "_Sitting_": "sitting",
-              "_Standing_": "standing"}
+              "_Standing_": "standing",
+              "_ascending stairs_": "ascending_stairs", 
+              "_descending stairs_": "descending_stairs",
+              "_lying down back_": "lying_down_back",
+              "_lying down on left_": "lying_down_left",
+              "_lying down on stomach_": "lying_down_stomach",
+              "_lying down right_": "lying_down_right",
+              "_miscellaneous movements_": "misc_movements",
+              "_normal walking_": "walking",
+              "_running_": "running",
+              "_shuffle walking_": "shuffle_walking",
+              "_sitting_": "sitting",
+              "_standing_": "standing",
+              "_lying_down_back_": "lying_down_back",
+              "_lying_down_on_left_": "lying_down_left",
+              "_lying_down_on_stomach_": "lying_down_stomach",
+              "_lying_down_right_": "lying_down_right",
+               "_ascending_stairs_": "ascending_stairs", 
+              "_descending_stairs_": "descending_stairs",
+              "_normal_walking_": "walking",
+              "_shuffle_walking_": "shuffle_walking",
+              "_miscellaneous_movements_": "misc_movements",}
 
 # dictionary of how respitory activities are names in the CSV files
 resp_dict = {"_Normal_": "normal_breathing",
@@ -24,7 +45,14 @@ resp_dict = {"_Normal_": "normal_breathing",
              "_Singing_": "singing",
              "_Hyperventilating_": "hyperventilating",
              "_Eating_": "eating",
-             "_Coughing_": "coughing"}
+             "_Coughing_": "coughing",
+             "_normal_": "normal_breathing",
+             "_laughing_": "laughing",
+             "_talking_": "talking",
+             "_singing_": "singing",
+             "_hyperventilating_": "hyperventilating",
+             "_eating_": "eating",
+             "_coughing_": "coughing"}
 
 # tags one file from given name
 def tag_file(filename):
@@ -70,5 +98,8 @@ def formatted_print(dict_of_lists):
     print(formatted_data)
 
 # only runs if this is the main program being run and not an import
-if __name__ == "__main__":        
-    formatted_print(tag_directory("./clean"))
+if __name__ == "__main__": 
+    tagged_files = tag_directory("./all_respeck")       
+    formatted_print(tagged_files)
+    print(tagged_files.keys())
+    

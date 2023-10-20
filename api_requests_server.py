@@ -37,6 +37,7 @@ def make_random_request():
 
     json_data = json.dumps(data)
 
+
     print("=====================REQUEST SENT=====================")
 
     # Make a POST request with JSON data

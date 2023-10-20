@@ -15,7 +15,7 @@ def open_csv(file_path):
         # Skip the header row 
         next(csv_reader, None)
         for row in csv_reader:
-            data_points.append(row[1:]) #currently drops the timestamp column, if we want it back then remove [1:]
+            data_points.append(row[-6:]) #currently only includes final 6 cols
             
     return data_points
 

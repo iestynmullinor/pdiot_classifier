@@ -4,7 +4,7 @@
 import file_tagger
 import sequence_genrator
 
-DATA_DIRECTORY = "./clean"
+DATA_DIRECTORY = "./all_respeck"
 
 def generate_training_data(directory = DATA_DIRECTORY):
 
