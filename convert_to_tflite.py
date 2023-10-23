@@ -1,8 +1,8 @@
 import tensorflow as tf
 from keras.models import load_model
 
-MODEL_TO_CONVERT = "CNN_1.keras"
-NAME_OF_TARGET = "CNN_1.tflite"
+MODEL_TO_CONVERT = "CNN_2.keras"
+NAME_OF_TARGET = "CNN_2.tflite"
 
 
 model = load_model("models/" + MODEL_TO_CONVERT)
