@@ -6,7 +6,7 @@ import sequence_genrator
 
 DATA_DIRECTORY = "./all_respeck"
 
-def generate_training_data(directory = DATA_DIRECTORY):
+def generate_training_data(directory, sequence_length, overlap):
 
     tagged_data = []
 
@@ -18,7 +18,7 @@ def generate_training_data(directory = DATA_DIRECTORY):
 
         # iterates through each csv file for the activity 
         for csv_file in csv_dictionary[key]:
-            sequences = sequence_genrator.generate_sequences_from_file(directory + "/" + csv_file)
+            sequences = sequence_genrator.generate_sequences_from_file(directory + "/" + csv_file, sequence_length, overlap)
 
             # iterate through each generated sequence
             for sequence in sequences:

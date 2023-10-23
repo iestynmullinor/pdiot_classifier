@@ -3,8 +3,6 @@
 
 import csv
 
-SEQUENCE_LENGTH = 3
-SEQUENCE_OVERLAP = 1
 
 # Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z] for each time stamp
 def open_csv(file_path):
@@ -20,7 +18,7 @@ def open_csv(file_path):
     return data_points
 
 
-def generate_sequences(all_frames, length=SEQUENCE_LENGTH, overlap=SEQUENCE_OVERLAP):
+def generate_sequences(all_frames, length, overlap):
 
     # sequence_array is a list of every generated sequence
     # a sequence is of form [frame1, frame2, ...] where each frame is of form [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z]
@@ -44,6 +42,6 @@ def generate_sequences(all_frames, length=SEQUENCE_LENGTH, overlap=SEQUENCE_OVER
     return sequence_array
 
 # returns all generated sequences from a filepath
-def generate_sequences_from_file(filepath, length=SEQUENCE_LENGTH, overlap=SEQUENCE_OVERLAP):
+def generate_sequences_from_file(filepath, length, overlap):
     return generate_sequences(open_csv(filepath), length, overlap)
 
