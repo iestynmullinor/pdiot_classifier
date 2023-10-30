@@ -16,7 +16,7 @@ def open_csv_without_gyro(file_path):
         for row in csv_reader:
             data_points.append(row[2:5]) # Only includes accelerometer data
             
-    return np.array(data_points)
+    return data_points
 
 
 # Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z] for each time stamp

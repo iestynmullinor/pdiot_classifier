@@ -77,6 +77,7 @@ if __name__=="__main__":
     label_to_index = {label: idx for idx, label in enumerate(UNIQUE_LABELS)}
     labels_encoded = [label_to_index[label] for label in labels]
     labels_encoded = np.array(labels_encoded)
+    print(f'---------{len(labels_encoded)}')
 
     train_data, dev_data, test_data, train_labels, dev_labels, test_labels = train_dev_test_split(sequences, labels_encoded, dev_size=0.1, test_size=0.1) #10% dev, 10% test
 
