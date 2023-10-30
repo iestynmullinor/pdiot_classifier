@@ -6,7 +6,7 @@ import sequence_genrator
 
 DATA_DIRECTORY = "./all_respeck"
 
-def generate_training_data(directory, sequence_length, overlap):
+def generate_training_data(directory, sequence_length, overlap, gyro = True): # if gyro is false, only accelerometer data is used
 
     tagged_data = []
 
@@ -18,7 +18,10 @@ def generate_training_data(directory, sequence_length, overlap):
 
         # iterates through each csv file for the activity 
         for csv_file in csv_dictionary[key]:
-            sequences = sequence_genrator.generate_sequences_from_file(directory + "/" + csv_file, sequence_length, overlap)
+            if gyro:
+                sequences = sequence_genrator.generate_sequences_from_file_with_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
+            else:
+                sequences = sequence_genrator.generate_sequences_from_file_without_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
 
             # iterate through each generated sequence
             for sequence in sequences:

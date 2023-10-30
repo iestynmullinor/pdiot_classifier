@@ -10,7 +10,7 @@ EPOCHS = 5
 SEQUENCE_LENGTH = 3
 SEQUENCE_OVERLAP = 1
 DATA_DIRECTORY = "./all_respeck"
-MODEL_NAME = "CNN_2.keras"
+MODEL_NAME = "this_model_is_shit.keras"
 
 
 #LSTM MODEL
