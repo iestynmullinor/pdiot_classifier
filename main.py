@@ -6,33 +6,38 @@ from keras.models import load_model
 from sklearn.model_selection import train_test_split
 
 BATCH_SIZE = 5
-EPOCHS = 5
+EPOCHS = 20
 SEQUENCE_LENGTH = 3
 SEQUENCE_OVERLAP = 1
 DATA_DIRECTORY = "./all_respeck"
-MODEL_NAME = "this_model_is_shit.keras"
-
+MODEL_NAME = "placeholder_no_gyro.keras"
+GYRO = False
 
 #LSTM MODEL
-def train_model_LSTM(sequences, labels_encoded, unique_labels, epochs, batch_size):
+#def train_model_LSTM(sequences, labels_encoded, unique_labels, epochs, batch_size):
 # Define the LSTM model
-    model = Sequential([
-        layers.LSTM(64, return_sequences=True, input_shape=(75, 6)), # input shape is (sequence length * 25, 6) 
-        layers.LSTM(64),
-        layers.Dense(len(unique_labels), activation='softmax') 
-    ])
+#    model = Sequential([
+#        layers.LSTM(64, return_sequences=True, input_shape=(75, 6)), # input shape is (sequence length * 25, 6) 
+#        layers.LSTM(64),
+#        layers.Dense(len(unique_labels), activation='softmax') 
+#    ])
 
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+#    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     #  training model
-    model.fit(sequences, labels_encoded, epochs, batch_size)
+#    model.fit(sequences, labels_encoded, epochs, batch_size)
 
-    return model 
+#    return model 
 
 #CNN MODEL
 def train_model_CNN(input_data, labels_encoded, unique_labels, epochs, batch_size, validation_data):
+
+    if GYRO:
+        width = 6
+    else:
+        width = 3
     # Define the CNN model for your specific input shape
     model = Sequential([
-        layers.Conv1D(32, 3, activation='relu', input_shape=(75, 6)),
+        layers.Conv1D(32, 3, activation='relu', input_shape=(SEQUENCE_LENGTH*25, width)),
         layers.MaxPooling1D(2),
         layers.Conv1D(64, 3, activation='relu'),
         layers.MaxPooling1D(2),
@@ -65,7 +70,7 @@ def train_dev_test_split(data, labels, dev_size, test_size, random_state=30):
 UNIQUE_LABELS = ['misc_movements&normal_breathing', 'sitting&singing', 'standing&talking', 'sitting&normal_breathing', 'standing&laughing', 'lying_down_back&talking', 'standing&normal_breathing', 'lying_down_back&coughing', 'standing&singing', 'shuffle_walking&normal_breathing', 'descending_stairs&normal_breathing', 'sitting&eating', 'standing&coughing', 'lying_down_stomach&normal_breathing', 'lying_down_stomach&talking', 'lying_down_left&hyperventilating', 'sitting&hyperventilating', 'lying_down_back&singing', 'lying_down_right&hyperventilating', 'walking&normal_breathing', 'sitting&coughing', 'sitting&talking', 'lying_down_right&coughing', 'lying_down_stomach&hyperventilating', 'lying_down_left&normal_breathing', 'standing&hyperventilating', 'lying_down_stomach&laughing', 'lying_down_left&coughing', 'standing&eating', 'running&normal_breathing', 'lying_down_stomach&singing', 'lying_down_back&hyperventilating', 'lying_down_back&normal_breathing', 'lying_down_right&normal_breathing', 'lying_down_left&laughing', 'lying_down_left&talking', 'ascending_stairs&normal_breathing', 'lying_down_right&laughing', 'lying_down_right&singing', 'lying_down_right&talking', 'lying_down_back&laughing', 'sitting&laughing', 'lying_down_stomach&coughing', 'lying_down_left&singing']
 if __name__=="__main__":
 
-    tagged_sequences = training_data_generator.generate_training_data(DATA_DIRECTORY, SEQUENCE_LENGTH, SEQUENCE_OVERLAP)
+    tagged_sequences = training_data_generator.generate_training_data(DATA_DIRECTORY, SEQUENCE_LENGTH, SEQUENCE_OVERLAP, GYRO)
 
     # Combine all sequences and labels
     sequences = [sequence for _, sequence in tagged_sequences]
