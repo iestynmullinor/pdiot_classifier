@@ -6,7 +6,7 @@ from keras.models import load_model
 from sklearn.model_selection import train_test_split
 
 BATCH_SIZE = 5
-EPOCHS = 30
+EPOCHS = 5
 SEQUENCE_LENGTH = 3
 SEQUENCE_OVERLAP = 1
 DATA_DIRECTORY = "./all_respeck"
@@ -29,7 +29,7 @@ def train_model_LSTM(sequences, labels_encoded, unique_labels, epochs, batch_siz
     return model 
 
 #CNN MODEL
-def train_model_CNN(input_data, labels_encoded, unique_labels, epochs, batch_size):
+def train_model_CNN(input_data, labels_encoded, unique_labels, epochs, batch_size, validation_data):
     # Define the CNN model for your specific input shape
     model = Sequential([
         layers.Conv1D(32, 3, activation='relu', input_shape=(75, 6)),
@@ -44,13 +44,13 @@ def train_model_CNN(input_data, labels_encoded, unique_labels, epochs, batch_siz
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
     # Train the CNN model
-    model.fit(input_data, labels_encoded, epochs=epochs, batch_size=batch_size)
+    model.fit(input_data, labels_encoded, epochs=epochs, batch_size=batch_size, validation_data=validation_data)
 
     return model
 
 
 # split data into training, dev, and test sets
-def train_dev_test_split(data, labels, dev_size, test_size, random_state=42):
+def train_dev_test_split(data, labels, dev_size, test_size, random_state=30):
     # Split the data into training and temporary (dev + test) sets
     train_data, temp_data, train_labels, temp_labels = train_test_split(data, labels, test_size=(dev_size + test_size), random_state=random_state)
     
@@ -78,12 +78,12 @@ if __name__=="__main__":
     labels_encoded = [label_to_index[label] for label in labels]
     labels_encoded = np.array(labels_encoded)
 
-    train_data, dev_data, test_data, train_labels, dev_labels, test_labels = train_dev_test_split(sequences, labels_encoded, dev_size=0.2, test_size=0.2) #20% dev, 20% test
+    train_data, dev_data, test_data, train_labels, dev_labels, test_labels = train_dev_test_split(sequences, labels_encoded, dev_size=0.1, test_size=0.1) #10% dev, 10% test
 
 
 
     # train and save model (CHOOSE BETWEEN CNN AND LSTM)
-    model = train_model_CNN(sequences, labels_encoded,UNIQUE_LABELS, batch_size=BATCH_SIZE, epochs=EPOCHS) #batch_size, epochs
+    model = train_model_CNN(train_data, train_labels, UNIQUE_LABELS, batch_size=BATCH_SIZE, epochs=EPOCHS, validation_data=(dev_data, dev_labels)) #batch_size, epochs
 
     # Save the trained model
     model.save("models/" + MODEL_NAME)
