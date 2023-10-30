@@ -5,12 +5,12 @@ from keras import layers, Sequential
 from keras.models import load_model
 from sklearn.model_selection import train_test_split
 
-BATCH_SIZE = 10
-EPOCHS = 10
+BATCH_SIZE = 5
+EPOCHS = 30
 SEQUENCE_LENGTH = 3
 SEQUENCE_OVERLAP = 1
 DATA_DIRECTORY = "./all_respeck"
-MODEL_NAME = "CNN_1.keras"
+MODEL_NAME = "CNN_2.keras"
 
 
 #LSTM MODEL

@@ -2,10 +2,11 @@
 # then this takes a recording as a CSV file and splits it into sequences of a specific length with specific overlap between sequences
 
 import csv
+import numpy as np
 
-
-# Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z] for each time stamp
-def open_csv(file_path):
+# Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z] for each time stamp
+# --- ONLY ACCELEROMETER DATA ---
+def open_csv_without_gyro(file_path):
     data_points = []
 
     with open(file_path, mode='r', newline='') as file:
@@ -13,7 +14,21 @@ def open_csv(file_path):
         # Skip the header row 
         next(csv_reader, None)
         for row in csv_reader:
-            data_points.append(row[-6:]) #currently only includes final 6 cols
+            data_points.append(row[2:5]) # Only includes accelerometer data
+            
+    return np.array(data_points)
+
+
+# Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z] for each time stamp
+def open_csv_with_gyro(file_path):
+    data_points = []
+
+    with open(file_path, mode='r', newline='') as file:
+        csv_reader = csv.reader(file)
+        # Skip the header row 
+        next(csv_reader, None)
+        for row in csv_reader:
+            data_points.append(row[-6:]) # Includes accelerometer and gyroscope data
             
     return data_points
 
@@ -39,9 +54,15 @@ def generate_sequences(all_frames, length, overlap):
         sequence_start_frame = sequence_start_frame + frames_per_sequence - frames_per_overlap
         sequence_end_frame = sequence_end_frame + frames_per_sequence - frames_per_overlap
     
-    return sequence_array
+    return np.array(sequence_array)
+
+def generate_sequences_from_file_without_gyroscope(filepath, length, overlap):
+    return generate_sequences(open_csv_without_gyro(filepath), length, overlap)
 
 # returns all generated sequences from a filepath
-def generate_sequences_from_file(filepath, length, overlap):
-    return generate_sequences(open_csv(filepath), length, overlap)
+def generate_sequences_from_file_with_gyroscope(filepath, length, overlap):
+    return generate_sequences(open_csv_with_gyro(filepath), length, overlap)
+
+# if __name__ == '__main__':
+#     print(generate_sequences_from_file_without_gyroscope('./all_respeck/S1_respeck_ascending stairs_normal_clean.csv', 5, 0))
 

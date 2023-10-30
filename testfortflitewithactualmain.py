@@ -1,7 +1,10 @@
 import numpy as np
+import tensorflow as tf
+import testing_model
 from keras.models import load_model
 
-MODEL = "CNN_2.keras"
+#Running the model with tflite
+
 UNIQUE_LABELS = ['misc_movements&normal_breathing', 'sitting&singing', 'standing&talking', 'sitting&normal_breathing', 'standing&laughing', 'lying_down_back&talking', 'standing&normal_breathing', 'lying_down_back&coughing', 'standing&singing', 'shuffle_walking&normal_breathing', 'descending_stairs&normal_breathing', 'sitting&eating', 'standing&coughing', 'lying_down_stomach&normal_breathing', 'lying_down_stomach&talking', 'lying_down_left&hyperventilating', 'sitting&hyperventilating', 'lying_down_back&singing', 'lying_down_right&hyperventilating', 'walking&normal_breathing', 'sitting&coughing', 'sitting&talking', 'lying_down_right&coughing', 'lying_down_stomach&hyperventilating', 'lying_down_left&normal_breathing', 'standing&hyperventilating', 'lying_down_stomach&laughing', 'lying_down_left&coughing', 'standing&eating', 'running&normal_breathing', 'lying_down_stomach&singing', 'lying_down_back&hyperventilating', 'lying_down_back&normal_breathing', 'lying_down_right&normal_breathing', 'lying_down_left&laughing', 'lying_down_left&talking', 'ascending_stairs&normal_breathing', 'lying_down_right&laughing', 'lying_down_right&singing', 'lying_down_right&talking', 'lying_down_back&laughing', 'sitting&laughing', 'lying_down_stomach&coughing', 'lying_down_left&singing']
 
 # this is lying down left and singing for tests
@@ -19,35 +22,32 @@ SITTING_NORMAL = [['-0.1586914', '-0.9319458', '0.29437256', '-0.03125', '-1.375
 # this is runnning and normal breathign
 RUNNING_NORMAL =[['-0.34887695', '-2.0', '-0.24420166', '-50.515625', '101.359375', '23.78125'], ['-0.2421875', '-0.7276001', '0.14251709', '-28.828125', '119.640625', '15.0625'], ['-0.052978516', '0.35394287', '-0.52667236', '-14.734375', '53.8125', '4.90625'], ['1.0058594', '0.12225342', '-0.32867432', '-18.46875', '-17.671875', '14.53125'], ['-0.15112305', '0.19744873', '-0.34991455', '-0.359375', '-43.640625', '31.8125'], ['0.1743164', '0.41864014', '0.1876831', '-8.8125', '-43.140625', '28.03125'], ['-0.49145508', '0.15960693', '-0.18902588', '-16.0625', '-28.703125', '19.15625'], ['0.40283203', '-0.4602661', '-0.45147705', '-39.09375', '-76.546875', '14.203125'], ['1.999939', '-2.0', '-0.1272583', '29.15625', '18.015625', '-44.4375'], ['-1.6787109', '-2.0', '-0.27838135', '13.734375', '-20.6875', '9.453125'], ['0.3310547', '-0.7354126', '-0.237854', '22.359375', '3.859375', '-60.34375'], ['0.88842773', '-1.1792603', '0.08465576', '-20.109375', '-19.859375', '1.0625'], ['-0.16186523', '0.14105225', '-0.41827393', '-8.59375', '-12.96875', '-19.125'], ['-0.9086914', '1.7096558', '-0.27105713', '21.921875', '-15.671875', '-40.125'], ['0.42382812', '-0.37823486', '-0.18023682', '19.59375', '15.515625', '-30.546875'], ['0.2578125', '-0.2276001', '0.010192871', '6.75', '19.78125', '5.53125'], ['0.26733398', '-0.5210571', '-0.631897', '16.359375', '-0.96875', '26.53125'], ['0.2890625', '-2.0', '-0.7925415', '42.6875', '31.8125', '-36.328125'], ['-0.030517578', '-2.0', '0.1696167', '-16.390625', '70.671875', '34.03125'], ['-0.16015625', '-1.2056274', '0.22235107', '-11.328125', '115.90625', '27.28125'], ['-0.49121094', '0.2501831', '-0.93170166', '-1.75', '54.390625', '35.0625'], ['1.3156738', '0.37615967', '-0.1338501', '-25.3125', '-14.625', '5.4375'], ['0.10424805', '0.15325928', '-0.1843872', '-11.40625', '-48.953125', '49.125'], ['-0.42822266', '0.43743896', '0.0836792', '-12.390625', '-44.46875', '12.71875'], ['-0.18334961', '0.25701904', '-0.23394775', '-10.359375', '-30.953125', '14.828125'], ['0.078125', '-0.4512329', '-0.89923096', '0.40625', '-34.328125', '0.46875'], ['1.999939', '-2.0', '-1.0657349', '53.765625', '-76.609375', '-41.515625'], ['-1.5661621', '-2.0', '-0.40216064', '-22.640625', '-74.453125', '-2.9375'], ['0.5390625', '-1.7459106', '0.002380371', '46.640625', '19.546875', '-45.015625'], ['-0.08935547', '-1.125061', '-0.089904785', '-38.359375', '1.609375', '-41.890625'], ['0.44482422', '0.37249756', '-0.04473877', '-31.8125', '3.21875', '-9.796875'], ['-0.42797852', '1.1305542', '-0.2678833', '2.234375', '16.671875', '-8.703125'], ['-0.34692383', '-0.10333252', '-0.16339111', '10.0', '14.21875', '-45.96875'], ['0.61743164', '-0.2539673', '-0.10064697', '9.09375', '0.21875', '6.859375'], ['-0.3095703', '0.17327881', '0.16546631', '20.375', '39.046875', '11.828125'], ['-0.11791992', '-1.0105591', '-1.0003052', '30.71875', '8.484375', '17.046875'], ['1.999939', '-2.0', '-0.51226807', '93.078125', '52.90625', '33.15625'], ['-0.26098633', '-1.7263794', '-0.28546143', '-19.984375', '116.90625', '35.78125'], ['0.05078125', '-0.7359009', '-0.090148926', '-23.671875', '112.734375', '26.484375'], ['0.32177734', '0.2645874', '-0.27301025', '-7.734375', '33.15625', '14.109375'], ['0.24902344', '0.508728', '-0.55181885', '-8.53125', '2.03125', '18.359375'], ['0.24487305', '0.3937378', '-0.28790283', '18.546875', '-48.34375', '21.546875'], ['0.42236328', '0.16815186', '0.01751709', '14.5625', '-69.671875', '31.3125'], ['-0.24975586', '-0.066223145', '-0.677063', '-4.46875', '-77.65625', '32.703125'], ['0.4609375', '-1.4216919', '-0.67852783', '25.46875', '-8.328125', '-13.765625'], ['1.999939', '-2.0', '0.19818115', '-18.796875', '-96.828125', '8.890625'], ['-1.4934082', '-1.3901978', '-0.81915283', '-5.53125', '23.25', '-57.125'], ['1.0471191', '-0.76397705', '0.038269043', '-29.953125', '18.859375', '-34.984375'], ['0.32666016', '-0.70684814', '0.21087646', '-33.53125', '-32.828125', '-8.109375'], ['-0.5957031', '1.1112671', '-0.6170044', '-21.171875', '-17.5', '-17.0625'], ['-0.30908203', '0.38909912', '-0.10040283', '22.8125', '5.0625', '-59.71875'], ['0.57177734', '-0.41778564', '-0.32696533', '-0.890625', '14.96875', '-16.03125'], ['0.2006836', '0.12420654', '0.22088623', '6.15625', '9.40625', '14.03125'], ['0.1303711', '-0.95025635', '-1.2761841', '28.375', '-4.515625', '33.34375'], ['1.5305176', '-2.0', '-0.49835205', '38.578125', '-0.90625', '-25.703125'], ['-0.43408203', '-2.0', '-0.051330566', '-9.828125', '77.375', '12.390625'], ['0.20458984', '-1.1814575', '-0.22003174', '-26.46875', '103.328125', '5.84375'], ['-0.20385742', '0.6185913', '-0.45733643', '8.109375', '45.71875', '22.515625'], ['0.7019043', '0.2062378', '-0.22247314', '-8.828125', '-3.15625', '7.71875'], ['0.16479492', '0.29730225', '-0.269104', '-8.1875', '-31.609375', '45.203125'], ['0.040283203', '0.276062', '0.090026855', '-5.15625', '-35.671875', '16.21875'], ['-0.43554688', '0.21990967', '-0.006164551', '-16.671875', '-35.578125', '18.359375'], ['0.3774414', '-0.8508911', '-0.59161377', '-13.328125', '-36.515625', '11.546875'], ['1.999939', '-2.0', '-1.0891724', '27.671875', '-60.234375', '-20.703125'], ['-1.8034668', '-2.0', '-0.06060791', '20.859375', '-12.828125', '-6.5625'], ['0.5144043', '-0.7463989', '-0.028869629', '16.765625', '25.765625', '-50.765625'], ['0.41357422', '-0.9055786', '0.019714355', '-14.453125', '-5.390625', '2.578125'], ['-0.08666992', '0.62786865', '-0.5166626', '-16.96875', '-14.875', '-3.34375'], ['-0.26733398', '0.711853', '-0.030334473', '22.734375', '9.0625', '-35.28125'], ['0.06274414', '-0.2312622', '-0.46099854', '27.65625', '28.78125', '-26.96875'], ['0.1628418', '0.050964355', '0.1762085', '16.28125', '23.75', '0.1875'], ['0.37695312', '-0.35992432', '-1.1795044', '42.65625', '-4.21875', '23.984375'], ['0.12670898', '-2.0', '-0.8779907', '15.09375', '51.203125', '-14.796875'], ['0.0029296875', '-2.0', '0.07122803', '-13.453125', '44.375', '6.546875'], ['-0.4169922', '-1.18927', '0.32781982', '-12.5', '117.6875', '23.703125']]
 
-# loading model
-def run_test_with_1_sequence(test_sequence):
+test_cases = [LYING_LEFT_SINGING, SITTING_COUGHING, STOMACH_NORMAL, SITTING_NORMAL, RUNNING_NORMAL]
+
+# Load TFLite model and allocate tensors.
+interpreter = tf.lite.Interpreter(model_path="test_model.tflite")
+interpreter.allocate_tensors()
+
+# Get input and output tensors.
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+for test_sequence in test_cases:
     individual_sequence_array = np.array(test_sequence, dtype=np.float32)
     individual_sequence_array = np.expand_dims(individual_sequence_array, axis=0)
-    model = load_model("models/" + MODEL)
+    model = load_model("test_model.keras")
+    excepted = model.predict(individual_sequence_array)
+    print ("Excepted: ", excepted)
+    interpreter.set_tensor(input_details[0]['index'], individual_sequence_array)
+    interpreter.invoke()
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+    print ("Output data: ", output_data)
+    np.testing.assert_almost_equal(output_data, excepted, decimal=5)
+    print ("They are the same")
+    interpreter.reset_all_variables()
 
-    # Perform inference to predict the tag
-    predictions = model.predict(individual_sequence_array)
 
-    # Post-processing to get the predicted class (index or label)
-    predicted_class_index = np.argmax(predictions, axis=1)
 
-    # Convert the predicted class index back to the tag
-    predicted_tag = UNIQUE_LABELS[predicted_class_index[0]]  
 
-    print(predicted_tag)
 
-if __name__ == "__main__":
-    run_test_with_1_sequence(LYING_LEFT_SINGING)
-    print("above should be lying down left singing")
 
-    run_test_with_1_sequence(SITTING_COUGHING)
-    print("above should be sitting coughing")
-
-    run_test_with_1_sequence(STOMACH_NORMAL)
-    print("above should be lying stomach normal breathing")
-
-    run_test_with_1_sequence(SITTING_NORMAL)
-    print("above should be sitting normal breathing")
-
-    run_test_with_1_sequence(RUNNING_NORMAL)
-    print("above should be running normal breathing")
