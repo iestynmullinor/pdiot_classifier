@@ -34,7 +34,6 @@ def open_csv_with_gyro(file_path):
 
 
 def generate_sequences(all_frames, length, overlap):
-
     # sequence_array is a list of every generated sequence
     # a sequence is of form [frame1, frame2, ...] where each frame is of form [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z]
     sequence_array = []
@@ -55,6 +54,7 @@ def generate_sequences(all_frames, length, overlap):
         sequence_end_frame = sequence_end_frame + frames_per_sequence - frames_per_overlap
     
     return np.array(sequence_array)
+
 
 def generate_sequences_from_file_without_gyroscope(filepath, length, overlap):
     return generate_sequences(open_csv_without_gyro(filepath), length, overlap)
