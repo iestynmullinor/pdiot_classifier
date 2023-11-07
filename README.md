@@ -3,13 +3,13 @@
 Models for demo are found in ```models/models_for_presentation/```
 
 ### Determine if  Stationary or Moving
-- Data is first put into ```stationary_moving_classifier.tflite``` to determine what model to go in next
+- Data is first put into ```stationary_or_moving.tflite``` to determine what model to go in next
 - Output will be ```0``` or ```1```, corresponding to the values
   ``` ["stationary", "moving"] ```
 - for example output of ```0``` is stationary as that is in positon 0 of the list above
 
 ### If output is "moving"
-- Data is then put into ```moving_activity_classifier.tflite``` to determine which moving activity
+- Data is then put into ```moving_classifier.tflite``` to determine which moving activity
 - ouput value will be int which corresponds to one of the items in the list ```["walking", "ascending_stairs", "descending_stairs", "shuffle_walking", "running", "misc_movements"]```
 - all of these are normal breathing
 
