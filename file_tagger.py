@@ -74,9 +74,7 @@ def tag_file(filename):
 
 # iterating through files in DATA_DIRECTORY
 # returns dictionary of each tag and a list of files associated with that tag
-def tag_directory(data_directory):
-
-    
+def tag_directory(data_directory):    
     tagged_files={}
     
     for filename in os.listdir(data_directory):
