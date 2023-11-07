@@ -80,7 +80,11 @@ def append_data_to_csv_file(data, recordingType, filename=path):
         
 
 
-def something(gyro, window_length, overlap, path="./all_respeck"):
+def generate_forest_data(gyro, window_length, overlap, path="./all_respeck"):
+    # Open the file in write mode to wipe its contents
+    with open(path + "/ForestData.csv", mode="w") as file:
+        pass
+
     tagged_files = file_tagger.tag_directory(path)
     for key in tagged_files:
         for recording in tagged_files[key]:
@@ -90,10 +94,9 @@ def something(gyro, window_length, overlap, path="./all_respeck"):
             else:
                 sequences = (sequence_genrator.generate_sequences_from_file_without_gyroscope(filepath, window_length, overlap))
                 
-            if recording == "S35_respeck_sitting_eating_clean.csv":
-                for sequence in sequences:
-                    append_data_to_csv_file(sequence, key)
+            for sequence in sequences:
+                append_data_to_csv_file(sequence, key)
 
 
 if __name__ == "__main__":
-    something(False, 4, 3)
+    generate_forest_data(False, 4, 3)
