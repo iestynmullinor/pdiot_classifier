@@ -69,34 +69,49 @@ RECORDINGS_ENCODED = {
 # Writes all recordings in a window to the same line
 def append_data_to_csv_file(data, recordingType, filename=path):
     data_line = [RECORDINGS_ENCODED[recordingType]]
-    
+
     for recording in data:
-        recording_str = np.array2string(recording, separator=',', max_line_width=np.inf)
+        recording_str = np.array2string(recording, separator=",", max_line_width=np.inf)
         data_line.append(recording_str)
 
     with open(filename, mode="a") as file:
         writer = csv.writer(file)
         writer.writerow(data_line)
-        
+
+
+def generate_headers(window_length):
+    headers = ["Label"]
+    no_headers = 25 * window_length
+    for i in range(no_headers):
+        headers.append("Respeck" + str(i + 1))
+    return headers
 
 
 def generate_forest_data(gyro, window_length, overlap, path="./all_respeck"):
     # Open the file in write mode to wipe its contents
     with open(path + "/ForestData.csv", mode="w") as file:
-        pass
+        writer = csv.writer(file)
 
     tagged_files = file_tagger.tag_directory(path)
     for key in tagged_files:
         for recording in tagged_files[key]:
             filepath = path + "/" + recording
             if gyro:
-                sequences = (sequence_genrator.generate_sequences_from_file_with_gyroscope(filepath, window_length, overlap))
+                sequences = (
+                    sequence_genrator.generate_sequences_from_file_with_gyroscope(
+                        filepath, window_length, overlap
+                    )
+                )
             else:
-                sequences = (sequence_genrator.generate_sequences_from_file_without_gyroscope(filepath, window_length, overlap))
-                
+                sequences = (
+                    sequence_genrator.generate_sequences_from_file_without_gyroscope(
+                        filepath, window_length, overlap
+                    )
+                )
+
             for sequence in sequences:
                 append_data_to_csv_file(sequence, key)
 
 
 if __name__ == "__main__":
-    generate_forest_data(False, 4, 3)
+    print(generate_headers(4))
