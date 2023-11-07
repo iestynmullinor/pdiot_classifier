@@ -21,4 +21,7 @@ Models for demo are found in ```models/models_for_presentation/```
 ### Output for determining respiratory activity
 - For ```sitting_or_standing``` , output will be an int which corresponds to one of the items in the list ```["sitting_or_standing&coughing", "sitting_or_standing&hyperventilating", "sitting_or_standing&normal_breathing", "sitting_or_standing&talking","sitting_or_standing&eating", "sitting_or_standing&singing","sitting_or_standing&laughing"]```
 - For all lying down positions, output will be int which corresponds to one of the items in the list ```["coughing","hyperventilating","talking","singing","laughing","normal_breathing"]```
-  
+
+## Approach using one model for all physical activities
+- the model ```all_physical_classifier.tflite``` returns the physical component of the prediction in a single classifier and is 98% accurate, but does not make any prediction on the respiratory activity
+- output value is an int which corresponds to a value in the list ```[sitting_or_standing","lying_down_back","lying_down_stomach","lying_down_right","lying_down_left","walking","ascending_stairs","descending_stairs","shuffle_walking","running","misc_movements]```
