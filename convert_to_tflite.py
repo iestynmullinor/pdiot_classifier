@@ -1,11 +1,13 @@
 import tensorflow as tf
 from keras.models import load_model
 
-MODEL_TO_CONVERT = "CNN_2.keras"
-NAME_OF_TARGET = "CNN_2.tflite"
+NAME_OF_MODEL_TO_CONVERT = "stationary_position_classifier"
+
+ORIGINAL_MODEL = NAME_OF_MODEL_TO_CONVERT + ".keras"
+NAME_OF_TARGET = NAME_OF_MODEL_TO_CONVERT + ".tflite"
 
 
-model = load_model("models/" + MODEL_TO_CONVERT)
+model = load_model("models/models_for_presentation/" + ORIGINAL_MODEL)
 tf.saved_model.save(model, "saved_model_keras_dir")
 
 # Convert the model
@@ -13,5 +15,5 @@ converter = tf.lite.TFLiteConverter.from_saved_model("saved_model_keras_dir") # 
 tflite_model = converter.convert()
 
 # Save the model.
-with open("models/" + NAME_OF_TARGET, 'wb') as f:
+with open("models/models_for_presentation/" + NAME_OF_TARGET, 'wb') as f:
   f.write(tflite_model)
