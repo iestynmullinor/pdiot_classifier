@@ -4,55 +4,31 @@ import os
 import json
 
 # dictionary of how activities are named in the CSV files
-activities_dict = {"_Ascending stairs_": "ascending_stairs", 
-              "_Descending stairs_": "descending_stairs",
-              "_Lying down back_": "lying_down_back",
-              "_Lying down on left_": "lying_down_left",
-              "_Lying down on stomach_": "lying_down_stomach",
-              "_Lying down right_": "lying_down_right",
-              "_Miscellaneous movements_": "misc_movements",
-              "_Normal walking_": "walking",
-              "_Running_": "running",
-              "_Shuffle walking_": "shuffle_walking",
-              "_Sitting_": "sitting",
-              "_Standing_": "standing",
-              "_ascending stairs_": "ascending_stairs", 
-              "_descending stairs_": "descending_stairs",
-              "_lying down back_": "lying_down_back",
-              "_lying down on left_": "lying_down_left",
-              "_lying down on stomach_": "lying_down_stomach",
-              "_lying down right_": "lying_down_right",
-              "_miscellaneous movements_": "misc_movements",
-              "_normal walking_": "walking",
-              "_running_": "running",
-              "_shuffle walking_": "shuffle_walking",
-              "_sitting_": "sitting",
-              "_standing_": "standing",
-              "_lying_down_back_": "lying_down_back",
-              "_lying_down_on_left_": "lying_down_left",
-              "_lying_down_on_stomach_": "lying_down_stomach",
-              "_lying_down_right_": "lying_down_right",
-               "_ascending_stairs_": "ascending_stairs", 
-              "_descending_stairs_": "descending_stairs",
-              "_normal_walking_": "walking",
-              "_shuffle_walking_": "shuffle_walking",
-              "_miscellaneous_movements_": "misc_movements",}
+activities_dict = {
+    "_ascending_": "ascending_stairs",
+    "_descending_": "descending_stairs",
+    "_lyingBack_": "lying_down_back",
+    "_lyingStomach_": "lying_down_stomach",
+    "_lyingLeft_": "lying_down_left",
+    "_lyingRight_": "lying_down_right",
+    "_miscMovement_": "misc_movements",
+    "_normalWalking_": "walking",
+    "_running_": "running",
+    "_shuffleWalking_": "shuffle_walking",
+    "_sitting_": "sitting",
+    "_standing_": "standing",
+}
+              
 
 # dictionary of how respitory activities are names in the CSV files
-resp_dict = {"_Normal_": "normal_breathing",
-             "_Laughing_": "laughing",
-             "_Talking_": "talking",
-             "_Singing_": "singing",
-             "_Hyperventilating_": "hyperventilating",
-             "_Eating_": "eating",
-             "_Coughing_": "coughing",
-             "_normal_": "normal_breathing",
-             "_laughing_": "laughing",
-             "_talking_": "talking",
-             "_singing_": "singing",
-             "_hyperventilating_": "hyperventilating",
-             "_eating_": "eating",
-             "_coughing_": "coughing"}
+resp_dict = {"_breathingNormal": "normal_breathing",
+             "_laughing": "laughing",
+             "_talking": "talking",
+             "_singing": "singing",
+             "_hyperventilating": "hyperventilating",
+             "_eating": "eating",
+             "_coughing": "coughing",
+}
 
 # tags one file from given name
 def tag_file(filename):
@@ -102,4 +78,5 @@ if __name__ == "__main__":
     tagged_files = tag_directory("./all_respeck")       
     formatted_print(tagged_files)
     print(tagged_files.keys())
+    print(len((tagged_files.keys())))
     
