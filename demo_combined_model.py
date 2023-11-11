@@ -14,7 +14,7 @@ from sklearn.model_selection import train_test_split
 MODELS_DIRECTORY = "./models/models_for_presentation"
 
 # model for telling if stationary or moving
-STATIONARY_MOVING_CLASSIFIER_NAME = "model1_for_presentation.keras" 
+STATIONARY_MOVING_CLASSIFIER_NAME = "stationary_or_moving.keras" 
 
 # model for telling what type of moving activity
 MOVING_ACTIVITY_CLASSIFIER_NAME = "moving_classifier.keras"
