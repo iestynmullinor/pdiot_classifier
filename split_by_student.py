@@ -42,3 +42,21 @@ def split_data(students_in_test_set, students_in_dev_set):
 
     return train_files, dev_files, test_files
 
+def get_list_of_stutents():
+    students = set()
+    for filename in os.listdir(DIRECTORY):
+        if filename.endswith(".csv"):
+            student = filename.split("_")[0]
+            students.add(student)
+    return students
+
+def get_list_of_files(student):
+    test_files = []
+    training_files = []
+    for filename in os.listdir(DIRECTORY):
+        if filename.endswith(".csv") and filename.startswith(student):
+            test_files.append(filename)
+        elif filename.endswith(".csv"):
+            training_files.append(filename)
+    return test_files, training_files
+
