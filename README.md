@@ -1,6 +1,6 @@
 # EXPLANATION FOR HOW THE MODELS COMBINE
 
-Models for demo are found in ```models/models_for_presentation/```
+Models for demo are found in ```models/demo_models/```
 
 ### Determine if  Stationary or Moving
 - Data is first put into ```stationary_or_moving.tflite``` to determine what model to go in next
@@ -19,8 +19,7 @@ Models for demo are found in ```models/models_for_presentation/```
 - Output of this determines which classifier to enter data into, for example ```2``` would be ```lying_down_stomach_model.tflite``` since 2 corresponds to ```lying_down_stomach``` in the list above
 
 ### Output for determining respiratory activity
-- For ```sitting_or_standing``` , output will be an int which corresponds to one of the items in the list ```["sitting_or_standing&coughing", "sitting_or_standing&hyperventilating", "sitting_or_standing&normal_breathing", "sitting_or_standing&talking","sitting_or_standing&eating", "sitting_or_standing&singing","sitting_or_standing&laughing"]```
-- For all lying down positions, output will be int which corresponds to one of the items in the list ```["coughing","hyperventilating","talking","singing","laughing","normal_breathing"]```
+- For all positions, output will be int which corresponds to one of the items in the list ```["normal_breathing", "coughing", "hyperventilating", "other"]```
 
 ## Approach using one model for all physical activities
 - the model ```all_physical_classifier.tflite``` returns the physical component of the prediction in a single classifier and is 98% accurate, but does not make any prediction on the respiratory activity

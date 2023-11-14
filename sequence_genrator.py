@@ -33,7 +33,7 @@ def open_csv_with_gyro(file_path):
     return data_points
 
 
-def generate_sequences(all_frames, length, overlap):
+def generate_sequences(all_frames, length, overlap, normalise=False):
 
     # sequence_array is a list of every generated sequence
     # a sequence is of form [frame1, frame2, ...] where each frame is of form [accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z]
@@ -50,18 +50,25 @@ def generate_sequences(all_frames, length, overlap):
 
     # adds each sequence to array
     while sequence_end_frame <= total_frames:
-        sequence_array.append(all_frames[sequence_start_frame: sequence_end_frame])
+        sequence = all_frames[sequence_start_frame: sequence_end_frame]
+        sequence_array.append(sequence)
         sequence_start_frame = sequence_start_frame + frames_per_sequence - frames_per_overlap
         sequence_end_frame = sequence_end_frame + frames_per_sequence - frames_per_overlap
-    
+
+    # Normalize every value in the matrix by accounting for every other value in the sequence array
+    if normalise:
+        sequence_array = np.array(sequence_array, dtype=float) # convert to float
+        sequence_array = (sequence_array - np.mean(sequence_array)) / np.std(sequence_array)
+        sequence_array = sequence_array.tolist() # convert back to list
+
     return np.array(sequence_array)
 
-def generate_sequences_from_file_without_gyroscope(filepath, length, overlap):
-    return generate_sequences(open_csv_without_gyro(filepath), length, overlap)
+def generate_sequences_from_file_without_gyroscope(filepath, length, overlap, normalise=False):
+    return generate_sequences(open_csv_without_gyro(filepath), length, overlap, normalise=False)
 
 # returns all generated sequences from a filepath
-def generate_sequences_from_file_with_gyroscope(filepath, length, overlap):
-    return generate_sequences(open_csv_with_gyro(filepath), length, overlap)
+def generate_sequences_from_file_with_gyroscope(filepath, length, overlap, normalise):
+    return generate_sequences(open_csv_with_gyro(filepath), length, overlap, normalise)
 
 # if __name__ == '__main__':
 #     print(generate_sequences_from_file_without_gyroscope('./all_respeck/S1_respeck_ascending stairs_normal_clean.csv', 5, 0))
