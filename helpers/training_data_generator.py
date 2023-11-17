@@ -2,7 +2,7 @@
 # it then generates sequences from each file, and gives each sequence the correct tag
 
 import file_tagger
-import sequence_genrator
+import helpers.sequence_generator as sequence_generator
 
 DATA_DIRECTORY = "./all_respeck"
 
@@ -19,9 +19,9 @@ def generate_training_data(directory, sequence_length, overlap, gyro = True): # 
         # iterates through each csv file for the activity 
         for csv_file in csv_dictionary[key]:
             if gyro:
-                sequences = sequence_genrator.generate_sequences_from_file_with_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
+                sequences = sequence_generator.generate_sequences_from_file_with_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
             else:
-                sequences = sequence_genrator.generate_sequences_from_file_without_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
+                sequences = sequence_generator.generate_sequences_from_file_without_gyroscope(directory + "/" + csv_file, sequence_length, overlap)
 
             # iterate through each generated sequence
             for sequence in sequences:
