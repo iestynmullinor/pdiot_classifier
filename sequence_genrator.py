@@ -58,7 +58,8 @@ def generate_sequences(all_frames, length, overlap, normalise=False):
     # Normalize every value in the matrix by accounting for every other value in the sequence array
     if normalise:
         sequence_array = np.array(sequence_array, dtype=float) # convert to float
-        sequence_array = (sequence_array - np.mean(sequence_array)) / np.std(sequence_array)
+        for i in range(sequence_array.shape[0]):
+            sequence_array[i] = (sequence_array[i] - np.mean(sequence_array[i], axis=0)) / np.std(sequence_array[i], axis=0)
         sequence_array = sequence_array.tolist() # convert back to list
 
     return np.array(sequence_array)

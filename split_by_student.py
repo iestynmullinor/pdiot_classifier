@@ -12,9 +12,10 @@ def get_prefixes():
             prefixes.add(prefix)
     return prefixes
 
-def split_data(students_in_test_set, students_in_dev_set):
+def split_data(students_in_test_set, students_in_dev_set, randomise=True):
     prefixes = list(get_prefixes())
-    random.shuffle(prefixes)
+    if randomise:
+        random.shuffle(prefixes)
     test_set = prefixes[:students_in_test_set]
     dev_set = prefixes[students_in_test_set:students_in_test_set+students_in_dev_set]
     train_set = prefixes[students_in_test_set+students_in_dev_set:]
