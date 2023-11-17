@@ -1,3 +1,5 @@
+# THIS ONE IS SEQUENCE GENERATOR
+
 # If we take the approach of splitting each recording into shorter overlapping sequences, to make real time classification easier,
 # then this takes a recording as a CSV file and splits it into sequences of a specific length with specific overlap between sequences
 
@@ -51,15 +53,17 @@ def generate_sequences(all_frames, length, overlap, normalise=False):
     # adds each sequence to array
     while sequence_end_frame <= total_frames:
         sequence = all_frames[sequence_start_frame: sequence_end_frame]
+        
+        # Normalize every value in the sequence matrix if normalise is True
+        if normalise:
+            sequence = np.array(sequence, dtype=float)
+            sequence = (sequence - np.mean(sequence, axis=0)) / np.std(sequence, axis=0)
+            sequence = sequence.tolist()
+        
         sequence_array.append(sequence)
+        
         sequence_start_frame = sequence_start_frame + frames_per_sequence - frames_per_overlap
         sequence_end_frame = sequence_end_frame + frames_per_sequence - frames_per_overlap
-
-    # Normalize every value in the matrix by accounting for every other value in the sequence array
-    if normalise:
-        sequence_array = np.array(sequence_array, dtype=float) # convert to float
-        sequence_array = (sequence_array - np.mean(sequence_array)) / np.std(sequence_array)
-        sequence_array = sequence_array.tolist() # convert back to list
 
     return np.array(sequence_array)
 

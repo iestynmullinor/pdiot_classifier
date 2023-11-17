@@ -1,3 +1,4 @@
+# THIS ONE IS SPLIT BY STUDENT
 
 import os
 import random
@@ -12,9 +13,10 @@ def get_prefixes():
             prefixes.add(prefix)
     return prefixes
 
-def split_data(students_in_test_set, students_in_dev_set):
+def split_data(students_in_test_set, students_in_dev_set, randomize=True):
     prefixes = list(get_prefixes())
-    random.shuffle(prefixes)
+    if randomize:
+        random.shuffle(prefixes)
     test_set = prefixes[:students_in_test_set]
     dev_set = prefixes[students_in_test_set:students_in_test_set+students_in_dev_set]
     train_set = prefixes[students_in_test_set+students_in_dev_set:]
@@ -59,4 +61,3 @@ def get_list_of_files(student):
         elif filename.endswith(".csv"):
             training_files.append(filename)
     return test_files, training_files
-
