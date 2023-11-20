@@ -1,7 +1,7 @@
 import tensorflow as tf
 from keras.models import load_model
 
-NAME_OF_MODEL_TO_CONVERT = "task2"
+NAME_OF_MODEL_TO_CONVERT = "task3"
 
 ORIGINAL_MODEL = NAME_OF_MODEL_TO_CONVERT + ".keras"
 NAME_OF_TARGET = NAME_OF_MODEL_TO_CONVERT + ".tflite"
