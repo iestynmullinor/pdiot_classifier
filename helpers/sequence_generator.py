@@ -57,7 +57,9 @@ def generate_sequences(all_frames, length, overlap, normalise=False):
         # Normalize every value in the sequence matrix if normalise is True
         if normalise:
             sequence = np.array(sequence, dtype=float)
-            sequence = (sequence - np.mean(sequence, axis=0)) / np.std(sequence, axis=0)
+            norm = np.linalg.norm(sequence, axis=1)
+            norm[norm == 0] = 1
+            sequence = sequence / norm[:, np.newaxis]
             sequence = sequence.tolist()
         
         sequence_array.append(sequence)
