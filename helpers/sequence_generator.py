@@ -6,6 +6,16 @@
 import csv
 import numpy as np
 
+def min_max_scaling_symmetric(data, new_max=1):
+    """
+    Applies Min-Max scaling to each column of the input data symmetrically around 0.
+    """
+    max_abs = np.max(np.abs(data), axis=0, keepdims=True)
+    
+    scaled_data = data / max_abs * new_max
+
+    return scaled_data
+
 # Converts csv file to a list of lists, where each list is [accel_x, accel_y, accel_z] for each time stamp
 # --- ONLY ACCELEROMETER DATA ---
 def open_csv_without_gyro(file_path):
@@ -54,12 +64,14 @@ def generate_sequences(all_frames, length, overlap, normalise=False):
     while sequence_end_frame <= total_frames:
         sequence = all_frames[sequence_start_frame: sequence_end_frame]
         
-        # Normalize every value in the sequence matrix if normalise is True
+        # Normalize every value in the sequence matrix if normalise is True (commented code)
+        # Scales each column to be on scale [-1,1] while keeping the sign of each value consistent (uncommented code)
         if normalise:
             sequence = np.array(sequence, dtype=float)
-            norm = np.linalg.norm(sequence, axis=1)
+
+            norm = np.linalg.norm(sequence, axis=0)[np.newaxis, :]
             norm[norm == 0] = 1
-            sequence = sequence / norm[:, np.newaxis]
+            sequence = sequence / norm
             sequence = sequence.tolist()
         
         sequence_array.append(sequence)
@@ -69,8 +81,8 @@ def generate_sequences(all_frames, length, overlap, normalise=False):
 
     return np.array(sequence_array)
 
-def generate_sequences_from_file_without_gyroscope(filepath, length, overlap, normalise=False):
-    return generate_sequences(open_csv_without_gyro(filepath), length, overlap, normalise=False)
+def generate_sequences_from_file_without_gyroscope(filepath, length, overlap, normalise):
+    return generate_sequences(open_csv_without_gyro(filepath), length, overlap, normalise)
 
 # returns all generated sequences from a filepath
 def generate_sequences_from_file_with_gyroscope(filepath, length, overlap, normalise):
