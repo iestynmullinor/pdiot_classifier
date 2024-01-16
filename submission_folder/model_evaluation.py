@@ -19,27 +19,50 @@ TASK1_CLASSES = ["sitStand_breathingNormal",
     "running_breathingNormal",
     "miscMovement_breathingNormal"]
 
-TASK2_CLASSES = ["sitting_or_standing&normal_breathing",
-    "sitting_or_standing&coughing",
-    "sitting_or_standing&hyperventilating",
+TASK2_CLASSES = ["sitStand_breathingNormal",
+    "sitStand_coughing",
+    "sitStand_hyperventilating",
 
-    "lying_down_left&normal_breathing",
-    "lying_down_left&coughing",
-    "lying_down_left&hyperventilating",
+    "lyingLeft_breathingNormal",
+    "lyingLeft_coughing",
+    "lyingLeft_hyperventilating",
 
-    "lying_down_right&normal_breathing",
-    "lying_down_right&coughing",
-    "lying_down_right&hyperventilating",
+    "lyingRight_breathingNormal",
+    "lyingRight_coughing",
+    "lyingRight_hyperventilating",
 
-    "lying_down_back&normal_breathing",
-    "lying_down_back&coughing",
-    "lying_down_back&hyperventilating",
+    "lyingBack_breathingNormal",
+    "lyingBack_coughing",
+    "lyingBack_hyperventilating",
 
-    "lying_down_stomach&normal_breathing",
-    "lying_down_stomach&coughing",
-    "lying_down_stomach&hyperventilating",]
+    "lyingStomach_breathingNormal",
+    "lyingStomach_coughing",
+    "lyingStomach_hyperventilating",]
 
-TASK3_CLASSES = []
+TASK3_CLASSES = ["sitStand_breathingNormal",
+    "sitStand_coughing",
+    "sitStand_hyperventilating",
+    "sitStand_other",
+    
+    "lyingLeft_breathingNormal",
+    "lyingLeft_coughing",
+    "lyingLeft_hyperventilating",
+    "lyingLeft_other",
+    
+    "lyingRight_breathingNormal",
+    "lyingRight_coughing",
+    "lyingRight_hyperventilating",
+    "lyingRight_other",
+    
+    "lyingBack_breathingNormal",
+    "lyingBack_coughing",
+    "lyingBack_hyperventilating",
+    "lyingBack_other",
+    
+    "lyingStomach_breathingNormal",
+    "lyingStomach_coughing",
+    "lyingStomach_hyperventilating",
+    "lyingStomach_other"]
 
 # Create the parser
 parser = argparse.ArgumentParser()
@@ -82,8 +105,6 @@ def generate_sequences(all_frames, length=5, overlap=0, normalise=False):
     while sequence_end_frame <= total_frames:
         sequence = all_frames[sequence_start_frame: sequence_end_frame]
         
-        # Normalize every value in the sequence matrix if normalise is True (commented code)
-        # Scales each column to be on scale [-1,1] while keeping the sign of each value consistent (uncommented code)
         if normalise:
             sequence = np.array(sequence, dtype=float)
 
@@ -100,22 +121,118 @@ def generate_sequences(all_frames, length=5, overlap=0, normalise=False):
     return np.array(sequence_array)
 
 
-def generate_test_data_from_recording(dataframe):
+def generate_test_data_from_recording(dataframe, window_length, overlap, normalise):
     # Get the data from the dataframe
     label = dataframe['class'].values[0]
     all_frames = dataframe[['accel_x', 'accel_y', 'accel_z']].values.tolist()
 
-    sequences = generate_sequences(all_frames)
+    sequences = generate_sequences(all_frames, window_length, overlap, normalise)
 
     return zip(sequences, [label]*len(sequences))
 
-def generate_all_test_data(dataframes):
+def generate_all_test_data(dataframes, window_length=5, overlap=0, normalise=False):
     test_data = []
 
     for dataframe in dataframes:
-        test_data.extend(generate_test_data_from_recording(dataframe))
+        test_data.extend(generate_test_data_from_recording(dataframe, window_length, overlap, normalise))
 
     return test_data
+
+################## FEATURE EXTRACTION FUNCTIONS ##################
+
+
+def fft(data):
+
+    # Extract x, y, and z data
+    x_data = data[:, 0]
+    y_data = data[:, 1]
+    z_data = data[:, 2]
+
+    # Apply FFT to each axis
+    x_fft = np.fft.fft(x_data)
+    y_fft = np.fft.fft(y_data)
+    z_fft = np.fft.fft(z_data)
+
+    # The result is complex numbers, so you may want to take the magnitude
+    x_magnitude = np.abs(x_fft)
+    y_magnitude = np.abs(y_fft)
+    z_magnitude = np.abs(z_fft)
+
+    representation = []
+    for i in range(len(x_magnitude)):
+        representation.append([x_magnitude[i], y_magnitude[i], z_magnitude[i]]) #, x_frequencies[i], y_frequencies[i], z_frequencies[i]])
+
+    return representation
+
+def extract_fft(test_data):
+        
+        test_features = [fft(sequence) for sequence in test_data]
+
+        return test_features
+
+def differential(data):
+        # Extract x, y, and z data
+        x_data = data[:, 0]
+        y_data = data[:, 1]
+        z_data = data[:, 2]
+
+        # Compute the differences between consecutive data points
+        x_diff = np.diff(x_data)
+        y_diff = np.diff(y_data)
+        z_diff = np.diff(z_data)
+
+        # Add a 0 at the start of the differential variables
+        x_diff = np.insert(x_diff, 0, 0)
+        y_diff = np.insert(y_diff, 0, 0)
+        z_diff = np.insert(z_diff, 0, 0)
+        
+        # Combine the differential values into a representation
+        representation = []
+        for i in range(len(x_diff)):
+            representation.append([x_diff[i], y_diff[i], z_diff[i]])
+
+        return representation
+
+def extract_differentials(test_data):
+        
+        test_features = [differential(sequence) for sequence in test_data]
+
+        return test_features
+
+def derivative(data):
+        # Extract x, y, and z data
+        x_data = data[:, 0]
+        y_data = data[:, 1]
+        z_data = data[:, 2]
+
+        # Compute the derivative of the data
+        x_derivative = np.gradient(x_data)
+        y_derivative = np.gradient(y_data)
+        z_derivative = np.gradient(z_data)
+
+        # Combine the derivative values into a representation
+        representation = []
+        for i in range(len(x_derivative)):
+            representation.append([x_derivative[i], y_derivative[i], z_derivative[i]])
+
+        return representation
+
+def extract_gradients(test_data):
+    test_features = [derivative(sequence) for sequence in test_data]
+
+    return test_features
+
+def extract_features(test_data):
+    fft_features = extract_fft(test_data)
+    differential_features = extract_differentials(test_data)
+    gradient_features = extract_gradients(test_data)
+
+    test_features = [np.concatenate((test_data[i], fft_features[i], differential_features[i], gradient_features[i]), axis=1) for i in range(len(fft_features))]
+
+    return test_features
+
+
+################## EVALUATION FUNCTIONS ##################
 
 def prep_data_for_task_1(labelled_sequences):
 
@@ -140,17 +257,64 @@ def eval_task_1(model, labelled_sequences):
     print(classification_report(test_labels, predicted_labels))
 
 
+def prep_data_for_task_2(labelled_sequences):
+    task2_labelled_sequences = [labelled_sequences[i] for i in range(len(labelled_sequences)) if labelled_sequences[i][1] in TASK2_CLASSES]
+    task_2_test_data = [sequence for sequence, label in task2_labelled_sequences]
+    task_2_test_labels = [label for sequence, label in task2_labelled_sequences]
 
+    task_2_features = extract_features(task_2_test_data)
 
+    return task_2_features, task_2_test_labels
 
+def eval_task_2(model, labelled_sequences):
 
+    test_data, test_labels = prep_data_for_task_2(labelled_sequences)
+
+    # convert to numpy array
+    test_data = np.array(test_data)
+
+    predictions = model.predict(test_data)
+
+    predicted_labels = np.argmax(predictions, axis=1)
+    predicted_labels = [TASK2_CLASSES[i] for i in predicted_labels]
+
+    print(classification_report(test_labels, predicted_labels))
+
+def prep_data_for_task_3(labelled_sequences):
+    task3_labelled_sequences = [labelled_sequences[i] for i in range(len(labelled_sequences)) if labelled_sequences[i][1] in TASK3_CLASSES]
+    task_3_test_data = [sequence for sequence, label in task3_labelled_sequences]
+    task_3_test_labels = [label for sequence, label in task3_labelled_sequences]
+
+    task_3_features = extract_features(task_3_test_data)
+
+    return task_3_features, task_3_test_labels
+
+def eval_task_3(model, labelled_sequences):
+         
+        test_data, test_labels = prep_data_for_task_3(labelled_sequences)
     
+        # convert to numpy array
+        test_data = np.array(test_data)
+    
+        predictions = model.predict(test_data)
+    
+        predicted_labels = np.argmax(predictions, axis=1)
+        predicted_labels = [TASK3_CLASSES[i] for i in predicted_labels]
+    
+        print(classification_report(test_labels, predicted_labels))
 
 
 
-# LOADING DATA RECORDINGS
+
+
+
 data_recordings = load_test_data(test_data_path)
-labelled_sequences = generate_all_test_data(data_recordings)
+
+
+# EVALUATION FOR TASK 1
+
+# LOADING DATA RECORDINGS (UNNORMALISED)
+raw_labelled_sequences = generate_all_test_data(data_recordings)
 
 
 # LOADING TASK 1 MODEL
@@ -159,16 +323,31 @@ task1_model = models.load_model(f"{model_path}/task1_model.keras")
 
 # EVALUATING TASK 1 MODEL
 print("Evaluating task 1 model...")
-eval_task_1(task1_model, labelled_sequences)
+eval_task_1(task1_model, raw_labelled_sequences)
 
-# labelled_sequences is a list of tuples of form (sequence, label) 
-# the labels have the format of the sample test set so will need to keep this in mind
+# FOR TASK 2 AND 3, WE NEED TO NORMALISE THE DATA
+
+# EVALUATION FOR TASK 2
+
+# LOADING DATA RECORDINGS (NORMALISED)
+normalised_labelled_sequences = generate_all_test_data(data_recordings, normalise=True)
 
 
 
 
-# Load the model
-# model = models.load_model(model_path)
+
+# LOADING TASK 2 MODEL
+task2_model = models.load_model(f"{model_path}/task2_model.keras")
+print("Evaluating task 2 model...")
+eval_task_2(task2_model, normalised_labelled_sequences)
+
+# EVALUATION FOR TASK 3
+
+# LOADING TASK 3 MODEL
+task3_model = models.load_model(f"{model_path}/task3_model.keras")
+print("Evaluating task 3 model...")
+eval_task_3(task3_model, normalised_labelled_sequences)
+
 
 
 
