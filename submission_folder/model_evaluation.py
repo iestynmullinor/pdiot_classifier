@@ -337,14 +337,14 @@ normalised_labelled_sequences = generate_all_test_data(data_recordings, normalis
 
 
 # LOADING TASK 2 MODEL
-task2_model = models.load_model(f"{model_path}/task2_model.keras")
+task2_model = models.load_model(f"{model_path}/task2_model_NOTFINAL.keras")
 print("Evaluating task 2 model...")
 eval_task_2(task2_model, normalised_labelled_sequences)
 
 # EVALUATION FOR TASK 3
 
 # LOADING TASK 3 MODEL
-task3_model = models.load_model(f"{model_path}/task3_model.keras")
+task3_model = models.load_model(f"{model_path}/task3_model_NOTFINAL.keras")
 print("Evaluating task 3 model...")
 eval_task_3(task3_model, normalised_labelled_sequences)
 
