@@ -5,6 +5,10 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import classification_report
 
+# All models can classify all classes which are relevant to their specific task
+# In the preprocessing stage, we remove all classes from the test data which are not relevant to the current task
+
+
 
 
 TASK1_CLASSES = ["sitStand_breathingNormal",
@@ -254,6 +258,8 @@ def eval_task_1(model, labelled_sequences):
     predicted_labels = np.argmax(predictions, axis=1)
     predicted_labels = [TASK1_CLASSES[i] for i in predicted_labels]
 
+    print("Classification report for task 1:")
+
     print(classification_report(test_labels, predicted_labels))
 
 
@@ -278,6 +284,8 @@ def eval_task_2(model, labelled_sequences):
     predicted_labels = np.argmax(predictions, axis=1)
     predicted_labels = [TASK2_CLASSES[i] for i in predicted_labels]
 
+    print("Classification report for task 2:")
+
     print(classification_report(test_labels, predicted_labels))
 
 def prep_data_for_task_3(labelled_sequences):
@@ -300,6 +308,8 @@ def eval_task_3(model, labelled_sequences):
     
         predicted_labels = np.argmax(predictions, axis=1)
         predicted_labels = [TASK3_CLASSES[i] for i in predicted_labels]
+
+        print("Classification report for task 3:")
     
         print(classification_report(test_labels, predicted_labels))
 
@@ -334,10 +344,8 @@ normalised_labelled_sequences = generate_all_test_data(data_recordings, normalis
 
 
 
-
-
 # LOADING TASK 2 MODEL
-task2_model = models.load_model(f"{model_path}/task2_model_NOTFINAL.keras")
+task2_model = models.load_model(f"{model_path}/task2_model.keras")
 print("Evaluating task 2 model...")
 eval_task_2(task2_model, normalised_labelled_sequences)
 
